@@ -17,12 +17,14 @@ For each project's initial setup, follow these steps:
 
 1. In this GitHub repository, click into the folder corresponding to the assignment you're working on and open the `.gdbinit` file
 2. In the upper right corner of the file viewer, click the download button ("Download raw file")
-3. Move the downloaded file into the base directory of your project
+3. Move the downloaded file into the base directory of your project.
+
+    a. **Note: You may have to rename the file** to `.gdbinit` (instead of just `gdbinit` - notice the missing dot at the beginning of the filename). When downloading the file from GitHub, it sometimes removes the dot from the beginning of the filename, which would make it not work.
 4. Open a terminal, `cd` to the base directory of your project, and run the following command:
     ```
     mkdir -p ~/.config/gdb && echo add-auto-load-safe-path $PWD/.gdbinit >> ~/.config/gdb/gdbinit
     ```
-5. Done! Run `gdb` as normal, and you should now have access to our debugging commands.
+5. Done! Inside gdb, run the `h user` command to verify your setup. If items appear in the "List of commands", then your setup was successful and you can now use our project-specific commands.
 
 If you want to get new updates to a dotfile for a project you've already set up, follow all steps above **except** step 4.
 
