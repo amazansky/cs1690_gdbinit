@@ -24,7 +24,7 @@ For each project's initial setup, follow these steps:
     ```
     mkdir -p ~/.config/gdb && echo add-auto-load-safe-path $PWD/.gdbinit >> ~/.config/gdb/gdbinit
     ```
-5. Done! Inside gdb, run the `h user` command to verify your setup. If items appear in the "List of commands", then your setup was successful and you can now use our project-specific commands.
+5. **Done!** Inside gdb, run the `help user` command to verify your setup. If commands appear in the "List of commands", then setup was successful.
 
 If you want to get new updates to a dotfile for a project you've already set up, follow all steps above **except** step 4.
 
