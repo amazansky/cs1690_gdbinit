@@ -1,0 +1,123 @@
+# .gdbinit (weenix - with command logging)
+# by Alex Mazansky
+# January 17, 2025
+# This code is open-source under the MIT license
+
+define-prefix weenix
+
+define weenix plus
+    # enable tui while preserving logging - this is a gdb bug
+    set logging enabled off
+    set trace-commands off
+    layout src
+    set trace-commands on
+    set logging enabled on
+end
+
+define weenix minus
+    # disable tui while preserving logging
+    set logging enabled off
+    set trace-commands off
+    tui disable
+    set trace-commands on
+    set logging enabled on
+end
+
+define weenix lb
+    # load breakpoints
+    source weenix.brk
+end
+
+define weenix lbt
+    # load breakpoints and enable tui
+    source weenix.brk
+    plus
+end
+
+define weenix sb
+    # save breakpoints
+    save breakpoints weenix.brk
+    shell tail -n +3 weenix.brk | sponge weenix.brk
+end
+
+define weenix sbq
+    # save breakpoints and quit
+    save breakpoints weenix.brk
+    shell tail -n +3 weenix.brk | sponge weenix.brk
+    quit
+end
+
+document weenix
+weenix debugging tools created by Alex Mazansky
+
+These tools aim to address two common difficulties while debugging weenix:
+1. Difficulties keeping breakpoints across debugging sessions, since you can not
+   restart gdb for weenix. This tool adds the ability to save your current
+   breakpoints out to a file (weenix.brk) and load them back in during your
+   future gdb runs.
+
+2. Difficulties seeing past command outputs after they scroll out of the window.
+   This tool adds a logging function that logs all of your command inputs and
+   debugging outputs to a file (gdb.txt) so that you can reference them later.
+
+Note: For another version of this gdbinit file without logging enabled, see the
+repository linked below.
+
+This command is part of `cs1690_gdbinit`, a set of debugging tools created by
+Alex Mazansky for cs1670/1690, the Operating Systems class at Brown University.
+These tools are open source! You can find them online at:
+https://github.com/amazansky/cs1690_gdbinit
+end
+
+document weenix plus
+Opens the TUI while preserving logging.
+Usage: weenix plus
+
+(Avoids a gdb bug would otherwise prevent logging continuity across opening or
+closing the TUI.)
+end
+
+document weenix minus
+Closes the TUI while preserving logging.
+Usage: weenix minus
+
+(Avoids a gdb bug would otherwise prevent logging continuity across opening or
+closing the TUI.)
+end
+
+document weenix lb
+Loads previously-saved breakpoints.
+Usage: weenix lb
+end
+
+document weenix lbt
+Loads previously-saved breakpoints and then opens the TUI.
+Usage: weenix lbt
+
+(See `weenix sb` and `weenix plus` for more details.)
+end
+
+document weenix sb
+Saves out current breakpoints to a file for later usage.
+Usage: weenix sb
+
+All breakpoints are saved out to the file `weenix.brk` except the first two,
+which are always added to each gdb session by other course-provided gdbinit
+code. Breakpoints can be loaded in future gdb sessions using `weenix lb` or
+`weenix lbt` commands.
+end
+
+document weenix sbq
+Saves out current breakpoints to a file for later usage, then quits gdb.
+Usage: weenix sbq
+
+All breakpoints are saved out to the file `weenix.brk` except the first two,
+which are always added to each gdb session by other course-provided gdbinit
+code. Breakpoints can be loaded in future gdb sessions using `weenix lb` or
+`weenix lbt` commands.
+end
+
+shell echo -e "\n===== New debugging session - $(date +%c) =====\n" >> gdb.txt
+set print pretty on
+set trace-commands on
+set logging enabled on

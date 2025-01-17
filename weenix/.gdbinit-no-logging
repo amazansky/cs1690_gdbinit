@@ -1,0 +1,87 @@
+# .gdbinit (weenix - without command logging)
+# by Alex Mazansky
+# January 17, 2025
+# This code is open-source under the MIT license
+
+define-prefix weenix
+
+define weenix lb
+    # load breakpoints
+    source weenix.brk
+end
+
+define weenix lbt
+    # load breakpoints and enable tui
+    source weenix.brk
+    layout src
+end
+
+define weenix sb
+    # save breakpoints
+    save breakpoints weenix.brk
+    shell tail -n +3 weenix.brk | sponge weenix.brk
+end
+
+define weenix sbq
+    # save breakpoints and quit
+    save breakpoints weenix.brk
+    shell tail -n +3 weenix.brk | sponge weenix.brk
+    quit
+end
+
+document weenix
+weenix debugging tools created by Alex Mazansky
+
+These tools aim to address the following common issue while debugging weenix:
+-  Difficulties keeping breakpoints across debugging sessions, since you can not
+   restart gdb for weenix. This tool adds the ability to save your current
+   breakpoints out to a file (weenix.brk) and load them back in during your
+   future gdb runs.
+
+Note: There is another version of this gdbinit file that also logs all of your
+gdb commands and outputs for your future reference. For that version, see the
+repository linked below.
+
+This command is part of `cs1690_gdbinit`, a set of debugging tools created by
+Alex Mazansky for cs1670/1690, the Operating Systems class at Brown University.
+These tools are open source! You can find them online at:
+https://github.com/amazansky/cs1690_gdbinit
+end
+
+document weenix lb
+Loads previously-saved breakpoints.
+Usage: weenix lb
+
+Breakpoints are loaded from the file `weenix.brk`, which is created by using
+the `weenix sb` or `weenix sbq` commands.
+end
+
+document weenix lbt
+Loads previously-saved breakpoints and then opens the TUI.
+Usage: weenix lbt
+
+Breakpoints are loaded from the file `weenix.brk`, which is created by using
+the `weenix sb` or `weenix sbq` commands.
+end
+
+document weenix sb
+Saves out current breakpoints to a file for later usage.
+Usage: weenix sb
+
+All breakpoints are saved out to the file `weenix.brk` except the first two,
+which are always added to each gdb session by other course-provided gdbinit
+code. Breakpoints can be loaded in future gdb sessions using `weenix lb` or
+`weenix lbt` commands.
+end
+
+document weenix sbq
+Saves out current breakpoints to a file for later usage, then quits gdb.
+Usage: weenix sbq
+
+All breakpoints are saved out to the file `weenix.brk` except the first two,
+which are always added to each gdb session by other course-provided gdbinit
+code. Breakpoints can be loaded in future gdb sessions using `weenix lb` or
+`weenix lbt` commands.
+end
+
+set print pretty on
